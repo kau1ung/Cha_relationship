@@ -11,53 +11,54 @@
         :root {
             --bg-color: #f5f5f7;
             --card-bg: #ffffff;
-            /* 친밀도 색상 정의 */
-            --very-good: #007aff; /* 매우 친함 - 파랑 */
-            --good: #5ac8fa;      /* 친함 - 하늘 */
-            --neutral: #8e8e93;   /* 그저 그럼 - 회색 */
-            --bad: #ff9500;       /* 안 좋음 - 주황 */
-            --very-bad: #ff3b30;  /* 매우 안 좋음 - 빨강 */
-            --lover: #f02bb8;     /* 애인 - 요청하신 핑크색 */
+            --very-good: #007aff; --good: #5ac8fa; --neutral: #8e8e93;
+            --bad: #ff9500; --very-bad: #ff3b30; --lover: #f02bb8;
         }
 
         body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 1000px; }
         h1 { font-weight: 600; text-align: center; margin-bottom: 30px; }
 
-        /* 입력 영역 */
-        .input-section { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 40px; }
+        /* 섹션 공통 */
+        .section { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        h2 { font-size: 1.1rem; margin-top: 0; margin-bottom: 20px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+
+        /* 입력창 영역 */
         .input-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        .photo-upload-area { border: 2px dashed #ddd; border-radius: 15px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; }
+        .photo-upload-area { border: 2px dashed #ddd; border-radius: 15px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: #fafafa; }
         #photo-preview { width: 100%; height: 100%; object-fit: cover; display: none; }
         .input-group { margin-bottom: 15px; }
         .input-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: #888; }
         .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 10px; background: #f9f9f9; font-size: 1rem; box-sizing: border-box; }
         
-        .btn-row { display: flex; gap: 10px; margin-top: 10px; }
-        button { flex: 1; padding: 15px; background: #000; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; }
-        .download-btn { background: #fff; color: #000; border: 1px solid #000; }
+        button { padding: 12px 20px; background: #000; color: #fff; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; transition: 0.2s; }
+        button:hover { opacity: 0.8; }
+        .download-btn { background: #fff; color: #000; border: 1px solid #000; width: 100%; margin-top: 10px; font-size: 1rem; padding: 15px; }
+
+        /* 관리 리스트 영역 */
+        .char-item { display: flex; align-items: center; gap: 15px; padding: 15px; border: 1px solid #eee; border-radius: 12px; margin-bottom: 10px; background: #fff; }
+        .char-item img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd; }
+        .char-info { flex: 1; }
+        .char-info strong { display: block; font-size: 0.95rem; }
+        .char-info span { font-size: 0.8rem; color: #888; }
+        .char-btns { display: flex; gap: 5px; }
+        .char-btns button { padding: 5px 10px; font-size: 0.75rem; background: #f0f0f0; color: #333; }
+        .char-btns .del-btn { background: #ffebeb; color: #ff3b30; }
+
+        /* 결과 카드 캔버스 */
+        #relationship-canvas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; padding: 20px; box-sizing: border-box; }
+        .card { background: #fff; border-radius: 20px; padding: 25px; position: relative; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
+        .card-photo-wrap { width: 110px; height: 110px; border-radius: 50%; border: 4px solid transparent; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
+        .card-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; }
+        .card-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
+        .card-relation { font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; color: #fff; margin-bottom: 15px; }
+        .card-thought { font-size: 0.9rem; color: #555; line-height: 1.5; background: #f8f8f8; padding: 12px; border-radius: 10px; width: 100%; text-align: center; white-space: pre-wrap; word-break: break-all; }
 
         /* 재단 모달 */
         #cropper-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-        .cropper-container { background: #fff; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; position: relative; }
-        .cropper-box-wrap { width: 100%; height: 350px; background: #000; overflow: hidden; border-radius: 10px; }
+        .cropper-container { background: #fff; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; }
+        .cropper-box-wrap { width: 100%; height: 350px; background: #000; border-radius: 10px; overflow: hidden; }
         img#cropper-image { max-width: 100%; display: block; }
-        
-        /* 실시간 미리보기 */
-        .preview-wrapper { position: absolute; top: -80px; right: 0; display: flex; flex-direction: column; align-items: center; }
-        .preview-circle { width: 70px; height: 70px; border-radius: 50%; overflow: hidden; border: 3px solid #fff; background: #eee; }
-
-        /* 카드 디자인 */
-        #relationship-canvas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; }
-        .card { background: #fff; border-radius: 20px; padding: 25px; position: relative; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; }
-        .card-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; margin-bottom: 15px; border: 4px solid transparent; padding: 3px; }
-        .card-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
-        .card-relation { font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; color: #fff; margin-bottom: 15px; }
-        .card-thought { font-size: 0.9rem; color: #555; line-height: 1.5; background: #f8f8f8; padding: 12px; border-radius: 10px; width: 100%; text-align: center; white-space: pre-wrap; }
-        
-        .card-actions { position: absolute; top: 10px; right: 10px; display: flex; gap: 5px; }
-        .action-btn { background: none; border: none; cursor: pointer; font-size: 12px; color: #ccc; }
-        .action-btn:hover { color: #333; }
     </style>
 </head>
 <body>
@@ -65,36 +66,38 @@
 <div class="container">
     <h1>Character Relationship</h1>
 
-    <div class="input-section">
+    <div class="section">
+        <h2>새 캐릭터 추가</h2>
         <div class="input-grid">
             <div class="photo-upload-area" onclick="document.getElementById('photo-input').click()">
                 <input type="file" id="photo-input" accept="image/*" style="display:none;" onchange="initCropper(event)">
                 <img id="photo-preview" src="">
-                <span id="upload-label">사진 선택</span>
+                <span id="upload-label">사진 선택 (미선택 시 기본)</span>
             </div>
             <div class="form-area">
-                <div class="input-group"><label>캐릭터 이름</label><input type="text" id="name-input"></div>
+                <div class="input-group"><label>캐릭터 이름</label><input type="text" id="name-input" placeholder="이름을 입력하세요"></div>
                 <div class="input-group">
                     <label>친밀도</label>
                     <select id="relation-input">
-                        <option value="very-good">매우 친함</option>
-                        <option value="good">친함</option>
-                        <option value="neutral">그저 그럼</option>
-                        <option value="bad">안 좋음</option>
-                        <option value="very-bad">매우 안 좋음</option>
-                        <option value="lover">애인</option>
+                        <option value="very-good">매우 친함</option><option value="good">친함</option>
+                        <option value="neutral">그저 그럼</option><option value="bad">안 좋음</option>
+                        <option value="very-bad">매우 안 좋음</option><option value="lover">애인</option>
                     </select>
                 </div>
             </div>
         </div>
         <div class="input-group" style="margin-top:15px;">
-            <label>이 캐릭터와의 서사</label>
-            <textarea id="thought-input" rows="2"></textarea>
+            <label>이 캐릭터와의 서사 (선택사항)</label>
+            <textarea id="thought-input" rows="2" placeholder="서사를 입력하세요."></textarea>
         </div>
-        <div class="btn-row">
-            <button onclick="addCharacter()">카드 생성</button>
-            <button class="download-btn" onclick="downloadImage()">이미지로 저장</button>
-        </div>
+        <button onclick="addCharacter()" style="width:100%;">카드 생성</button>
+    </div>
+
+    <div class="section">
+        <h2>캐릭터 관리 및 순서 변경</h2>
+        <div id="manage-list">
+            </div>
+        <button class="download-btn" onclick="downloadImage()">완성된 관계도 이미지로 저장</button>
     </div>
 
     <div id="relationship-canvas"></div>
@@ -102,24 +105,25 @@
 
 <div id="cropper-modal">
     <div class="cropper-container">
-        <div class="preview-wrapper">
-            <div class="preview-circle"></div>
-            <span style="color:#fff; font-size:12px; margin-top:5px;">카드 적용 예시</span>
-        </div>
         <div class="cropper-box-wrap">
             <img id="cropper-image" src="">
         </div>
-        <div class="btn-row" style="margin-top:20px;">
-            <button onclick="cropImage()">적용하기</button>
-            <button onclick="closeModal()" style="background:#888;">취소</button>
+        <div style="display:flex; gap:10px; margin-top:20px;">
+            <button onclick="cropImage()" style="flex:1;">적용하기</button>
+            <button onclick="closeModal()" style="background:#888; flex:1;">취소</button>
         </div>
     </div>
 </div>
 
 <script>
-    let cropper;
-    let croppedImageData = "";
+    // 기본 프로필 이미지 (Base64)
+    const DEFAULT_IMG = "data:image/png;base64,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";
 
+    let cropper;
+    let currentCroppedData = "";
+    let characters = []; // 전체 캐릭터 데이터 배열
+
+    // 1. 크로퍼 초기화
     function initCropper(event) {
         const file = event.target.files[0];
         if (file) {
@@ -129,11 +133,7 @@
                 img.src = e.target.result;
                 document.getElementById('cropper-modal').style.display = 'flex';
                 if (cropper) cropper.destroy();
-                cropper = new Cropper(img, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    preview: '.preview-circle'
-                });
+                cropper = new Cropper(img, { aspectRatio: 1, viewMode: 1 });
             };
             reader.readAsDataURL(file);
         }
@@ -141,9 +141,10 @@
 
     function cropImage() {
         const canvas = cropper.getCroppedCanvas({ width: 400, height: 400 });
-        croppedImageData = canvas.toDataURL('image/png');
-        document.getElementById('photo-preview').src = croppedImageData;
-        document.getElementById('photo-preview').style.display = 'block';
+        currentCroppedData = canvas.toDataURL('image/png');
+        const preview = document.getElementById('photo-preview');
+        preview.src = currentCroppedData;
+        preview.style.display = 'block';
         document.getElementById('upload-label').style.display = 'none';
         closeModal();
     }
@@ -153,92 +154,135 @@
         document.getElementById('photo-input').value = "";
     }
 
+    // 2. 캐릭터 데이터 관리
     function addCharacter() {
-        const name = document.getElementById('name-input').value;
-        const relation = document.getElementById('relation-input');
-        const thought = document.getElementById('thought-input').value;
+        const nameInput = document.getElementById('name-input');
+        const relationInput = document.getElementById('relation-input');
+        const thoughtInput = document.getElementById('thought-input');
 
-        if (!name || !croppedImageData) return alert("이름과 사진을 확인해주세요.");
+        if (!nameInput.value.trim()) return alert("이름을 입력해주세요.");
 
         const charData = {
             id: Date.now(),
-            name,
-            relVal: relation.value,
-            relTxt: relation.options[relation.selectedIndex].text,
-            thought,
-            image: croppedImageData
+            name: nameInput.value.trim(),
+            relVal: relationInput.value,
+            relTxt: relationInput.options[relationInput.selectedIndex].text,
+            thought: thoughtInput.value.trim(),
+            image: currentCroppedData || DEFAULT_IMG // 사진 없으면 기본 이미지
         };
 
-        const list = JSON.parse(localStorage.getItem('char_final_v2') || '[]');
-        list.push(charData);
-        localStorage.setItem('char_final_v2', JSON.stringify(list));
-        
-        renderCard(charData);
-        resetInputs();
+        characters.push(charData);
+        saveAndRender();
+        resetForm();
     }
 
-    function renderCard(data) {
+    function saveAndRender() {
+        localStorage.setItem('char_list_v4', JSON.stringify(characters));
+        renderManageList();
+        renderCanvas();
+    }
+
+    // 3. 관리 리스트 그리기
+    function renderManageList() {
+        const listDiv = document.getElementById('manage-list');
+        listDiv.innerHTML = "";
+
+        characters.forEach((char, index) => {
+            const item = document.createElement('div');
+            item.className = 'char-item';
+            item.innerHTML = `
+                <img src="${char.image}">
+                <div class="char-info">
+                    <strong>${char.name}</strong>
+                    <span>${char.relTxt}</span>
+                </div>
+                <div class="char-btns">
+                    <button onclick="moveStep(${index}, -1)">▲</button>
+                    <button onclick="moveStep(${index}, 1)">▼</button>
+                    <button onclick="editChar(${char.id})">수정</button>
+                    <button class="del-btn" onclick="deleteChar(${char.id})">삭제</button>
+                </div>
+            `;
+            listDiv.appendChild(item);
+        });
+    }
+
+    // 4. 실제 관계도 카드 그리기 (아이콘 없이 순수하게)
+    function renderCanvas() {
         const canvas = document.getElementById('relationship-canvas');
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.id = `card-${data.id}`;
+        canvas.innerHTML = "";
+
+        characters.forEach(data => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            const thoughtHtml = data.thought ? `<div class="card-thought">${data.thought}</div>` : '';
+
+            card.innerHTML = `
+                <div class="card-photo-wrap" style="border-color: var(--${data.relVal})">
+                    <img src="${data.image}" class="card-photo">
+                </div>
+                <div class="card-name">${data.name}</div>
+                <div class="card-relation" style="background-color: var(--${data.relVal})">${data.relTxt}</div>
+                ${thoughtHtml}
+            `;
+            canvas.appendChild(card);
+        });
+    }
+
+    // 순서 변경
+    function moveStep(index, step) {
+        const newIndex = index + step;
+        if (newIndex < 0 || newIndex >= characters.length) return;
+        const temp = characters[index];
+        characters[index] = characters[newIndex];
+        characters[newIndex] = temp;
+        saveAndRender();
+    }
+
+    // 수정 기능
+    function editChar(id) {
+        const char = characters.find(c => c.id === id);
+        const newName = prompt("수정할 이름:", char.name);
+        if (newName === null) return;
+        const newThought = prompt("수정할 서사:", char.thought);
         
-        const thoughtHtml = data.thought ? `<div class="card-thought" id="text-${data.id}">${data.thought}</div>` : '';
-
-        card.innerHTML = `
-            <div class="card-actions">
-                <button class="action-btn" onclick="editThought(${data.id})">수정</button>
-                <button class="action-btn" onclick="deleteCard(${data.id})">✕</button>
-            </div>
-            <img src="${data.image}" class="card-photo" style="border-color: var(--${data.relVal})">
-            <div class="card-name">${data.name}</div>
-            <div class="card-relation" style="background-color: var(--${data.relVal})">${data.relTxt}</div>
-            ${thoughtHtml}
-        `;
-        canvas.appendChild(card);
+        char.name = newName || char.name;
+        char.thought = newThought !== null ? newThought : char.thought;
+        saveAndRender();
     }
 
-    function editThought(id) {
-        const list = JSON.parse(localStorage.getItem('char_final_v2'));
-        const char = list.find(c => c.id === id);
-        const newThought = prompt("수정할 서사 내용을 입력하세요:", char.thought);
-        
-        if (newThought !== null) {
-            char.thought = newThought;
-            localStorage.setItem('char_final_v2', JSON.stringify(list));
-            location.reload();
-        }
+    function deleteChar(id) {
+        if (!confirm("정말 삭제할까요?")) return;
+        characters = characters.filter(c => c.id !== id);
+        saveAndRender();
     }
 
-    function deleteCard(id) {
-        if (!confirm("삭제할까요?")) return;
-        let list = JSON.parse(localStorage.getItem('char_final_v2'));
-        list = list.filter(c => c.id !== id);
-        localStorage.setItem('char_final_v2', JSON.stringify(list));
-        document.getElementById(`card-${id}`).remove();
-    }
-
-    function resetInputs() {
+    function resetForm() {
         document.getElementById('name-input').value = "";
         document.getElementById('thought-input').value = "";
         document.getElementById('photo-preview').style.display = "none";
         document.getElementById('upload-label').style.display = "block";
-        croppedImageData = "";
+        currentCroppedData = "";
     }
 
     function downloadImage() {
         const canvas = document.getElementById('relationship-canvas');
+        if (characters.length === 0) return alert("저장할 카드가 없습니다.");
+        
         html2canvas(canvas, { backgroundColor: "#f5f5f7", scale: 2 }).then(cvs => {
             const link = document.createElement('a');
-            link.download = 'my-characters.png';
+            link.download = 'character-map.png';
             link.href = cvs.toDataURL();
             link.click();
         });
     }
 
     window.onload = () => {
-        const list = JSON.parse(localStorage.getItem('char_final_v2') || '[]');
-        list.forEach(renderCard);
+        const saved = localStorage.getItem('char_list_v4');
+        if (saved) {
+            characters = JSON.parse(saved);
+            saveAndRender();
+        }
     };
 </script>
 </body>
