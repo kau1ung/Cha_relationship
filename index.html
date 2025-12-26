@@ -2,8 +2,8 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>캐릭터 관계도 관리 도구</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>서사 정리</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
@@ -14,63 +14,72 @@
             --bad: #ff9500; --very-bad: #ff3b30; --lover: #f02bb8;
         }
 
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 1000px; }
-        h1 { font-weight: 600; text-align: center; margin-bottom: 30px; }
+        body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px 15px; display: flex; flex-direction: column; align-items: center; }
+        .container { width: 100%; max-width: 900px; padding-top: 10px; }
 
-        .section { background: #fff; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        h2 { font-size: 1.1rem; margin-top: 0; margin-bottom: 20px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+        .section { background: #fff; padding: 20px; border-radius: 18px; box-shadow: 0 8px 25px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        h2 { font-size: 1rem; margin-top: 0; margin-bottom: 15px; color: #333; border-bottom: 1px solid #eee; padding-bottom: 8px; }
 
-        .input-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; }
-        .photo-upload-area { border: 2px dashed #ddd; border-radius: 15px; height: 160px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: #fafafa; position: relative; }
+        .input-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 15px; }
+        @media (max-width: 600px) { .input-grid { grid-template-columns: 1fr; } }
+
+        .photo-upload-area { border: 2px dashed #ddd; border-radius: 15px; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; overflow: hidden; background: #fafafa; }
         #photo-preview { width: 100%; height: 100%; object-fit: cover; }
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 8px; font-size: 0.85rem; font-weight: 600; color: #888; }
+        
+        .input-group { margin-bottom: 12px; }
+        .input-group label { display: block; margin-bottom: 6px; font-size: 0.8rem; font-weight: 600; color: #888; }
         .input-group input, .input-group select, .input-group textarea { width: 100%; padding: 12px; border: 1px solid #eee; border-radius: 10px; background: #f9f9f9; font-size: 1rem; box-sizing: border-box; }
         
-        .main-btn { width: 100%; padding: 15px; background: #000; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 1rem; }
-        .secondary-btn { background: #fff; color: #000; border: 1px solid #000; margin-top: 10px; }
-        .danger-btn { background: #fff; color: #ff3b30; border: 1px solid #ff3b30; margin-top: 10px; font-size: 0.8rem; padding: 10px; }
+        .main-btn { width: 100%; padding: 14px; background: #000; color: #fff; border: none; border-radius: 12px; cursor: pointer; font-weight: 600; font-size: 1rem; }
+        .secondary-btn { background: #fff; color: #000; border: 1px solid #000; margin-top: 8px; }
+        .toggle-btn-group { display: flex; gap: 10px; margin-top: 15px; }
+        .toggle-btn { flex: 1; padding: 10px; border: 1px solid #ddd; background: #fff; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+        .toggle-btn.active { background: #000; color: #fff; border-color: #000; }
 
-        /* 관리 리스트 */
-        .char-item { display: flex; align-items: center; gap: 15px; padding: 12px; border: 1px solid #eee; border-radius: 12px; margin-bottom: 10px; background: #fff; }
+        .char-item { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid #eee; border-radius: 12px; margin-bottom: 8px; background: #fff; }
         .char-item img { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
-        .char-info { flex: 1; }
-        .char-info strong { font-size: 0.95rem; }
+        .char-info { flex: 1; min-width: 0; }
         .char-btns { display: flex; gap: 4px; }
-        .char-btns button { padding: 6px 10px; font-size: 0.7rem; border-radius: 6px; border: 1px solid #ddd; background: #fff; cursor: pointer; }
+        .char-btns button { padding: 5px 8px; font-size: 0.7rem; border-radius: 6px; border: 1px solid #ddd; background: #fff; }
 
-        /* 결과 카드 */
-        #relationship-canvas { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; width: 100%; padding: 20px; box-sizing: border-box; }
-        .card { border-radius: 20px; padding: 25px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; transition: 0.3s; }
-        .card-photo-wrap { width: 108px; height: 108px; border-radius: 50%; border: 4px solid transparent; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; overflow: hidden; }
+        /* 결과 카드 캔버스 레이아웃 제어 */
+        #relationship-canvas { 
+            display: grid; 
+            gap: 15px; 
+            width: 100%; 
+            padding: 15px; 
+            box-sizing: border-box; 
+        }
+        /* JS에서 그리드 열 개수를 제어함 */
+        .grid-2 { grid-template-columns: 1fr 1fr; }
+        .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+        @media (max-width: 500px) { .grid-3 { grid-template-columns: 1fr 1fr; } } /* 아주 좁은 모바일에서는 3열이어도 2열로 보임 */
+
+        .card { background: #fff; border-radius: 18px; padding: 15px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.03); border: 1px solid #f0f0f0; height: fit-content; }
+        .card-photo-wrap { width: 80px; height: 80px; border-radius: 50%; border: 3px solid transparent; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; overflow: hidden; flex-shrink: 0; }
         .card-photo { width: 100%; height: 100%; object-fit: cover; }
-        .card-name { font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
-        .card-relation { font-size: 0.75rem; font-weight: 800; padding: 4px 12px; border-radius: 20px; color: #fff; margin-bottom: 15px; }
-        .card-thought { font-size: 0.9rem; color: #555; line-height: 1.5; background: rgba(0,0,0,0.03); padding: 12px; border-radius: 10px; width: 100%; text-align: center; white-space: pre-wrap; word-break: break-all; }
+        .card-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 4px; text-align: center; }
+        .card-relation { font-size: 0.65rem; font-weight: 800; padding: 3px 10px; border-radius: 15px; color: #fff; margin-bottom: 10px; }
+        .card-thought { font-size: 0.75rem; color: #555; line-height: 1.4; background: #f8f8f8; padding: 10px; border-radius: 8px; width: 100%; text-align: center; white-space: pre-wrap; word-break: break-all; }
 
-        /* 모달 */
-        #cropper-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; }
-        .cropper-container { background: #fff; padding: 25px; border-radius: 20px; width: 90%; max-width: 500px; }
-        .cropper-box-wrap { width: 100%; height: 350px; background: #000; border-radius: 10px; overflow: hidden; }
-        img#cropper-image { max-width: 100%; display: block; }
+        #cropper-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center; }
+        .cropper-container { background: #fff; padding: 15px; border-radius: 20px; width: 95%; max-width: 450px; }
+        .cropper-box-wrap { width: 100%; height: 300px; background: #000; border-radius: 10px; overflow: hidden; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Character Relationship</h1>
-
-    <div class="section" id="input-anchor">
+    <div class="section">
         <h2 id="form-title">새 캐릭터 추가</h2>
         <div class="input-grid">
             <div class="photo-upload-area" onclick="document.getElementById('photo-input').click()">
                 <input type="file" id="photo-input" accept="image/*" style="display:none;" onchange="initCropper(event)">
                 <img id="photo-preview" src="" style="display:none;">
-                <span id="upload-label">사진을 선택하세요</span>
+                <span id="upload-label">사진 선택</span>
             </div>
             <div class="form-area">
-                <div class="input-group"><label>캐릭터 이름</label><input type="text" id="name-input"></div>
+                <div class="input-group"><label>캐릭터 이름</label><input type="text" id="name-input" placeholder="이름"></div>
                 <div class="input-group">
                     <label>친밀도</label>
                     <select id="relation-input">
@@ -81,32 +90,37 @@
                 </div>
             </div>
         </div>
-        <div class="input-group" style="margin-top:15px;">
-            <label>이 캐릭터와의 서사 (선택사항)</label>
-            <textarea id="thought-input" rows="2"></textarea>
-        </div>
-        <div class="input-group">
-            <label>카드 배경색 (선택)</label>
-            <input type="color" id="card-color-input" value="#ffffff" style="height: 40px; cursor: pointer;">
+        <div class="input-group" style="margin-top:10px;">
+            <label>이 캐릭터와의 서사</label>
+            <textarea id="thought-input" rows="3" placeholder="서사를 입력하세요"></textarea>
         </div>
         <button id="submit-btn" class="main-btn" onclick="handleSubmit()">카드 생성</button>
-        <button id="cancel-edit-btn" class="secondary-btn" style="display:none; width: 100%;" onclick="resetForm()">수정 취소</button>
+        <button id="cancel-edit-btn" class="main-btn secondary-btn" style="display:none;" onclick="resetForm()">수정 취소</button>
     </div>
 
     <div class="section">
-        <h2>캐릭터 관리</h2>
+        <h2>캐릭터 목록 및 설정</h2>
         <div id="manage-list"></div>
-        <button class="main-btn secondary-btn" onclick="downloadImage()">관계도 이미지로 저장</button>
-        <button class="danger-btn" style="width:100%" onclick="clearAllData()">데이터 전체 초기화</button>
+        
+        <div class="input-group" style="margin-top:20px;">
+            <label>저장 배열 선택</label>
+            <div class="toggle-btn-group">
+                <button id="btn-grid-2" class="toggle-btn active" onclick="setGrid(2)">2열 배열</button>
+                <button id="btn-grid-3" class="toggle-btn" onclick="setGrid(3)">3열 배열</button>
+            </div>
+        </div>
+
+        <button class="main-btn secondary-btn" style="margin-top:15px;" onclick="downloadImage()">관계도 이미지로 저장</button>
+        <button style="width:100%; border:none; background:none; color:#ccc; font-size:0.7rem; margin-top:20px; cursor:pointer;" onclick="clearAllData()">데이터 전체 초기화</button>
     </div>
 
-    <div id="relationship-canvas"></div>
+    <div id="relationship-canvas" class="grid-2"></div>
 </div>
 
 <div id="cropper-modal">
     <div class="cropper-container">
         <div class="cropper-box-wrap"><img id="cropper-image" src=""></div>
-        <div style="display:flex; gap:10px; margin-top:20px;">
+        <div style="display:flex; gap:10px; margin-top:15px;">
             <button class="main-btn" onclick="cropImage()" style="flex:1;">적용</button>
             <button class="main-btn" onclick="closeModal()" style="background:#888; flex:1;">취소</button>
         </div>
@@ -117,7 +131,23 @@
     let cropper;
     let currentCroppedData = "";
     let characters = [];
-    let editId = null; // 수정 중인 캐릭터 ID
+    let editId = null;
+    let currentGrid = 2;
+
+    function setGrid(num) {
+        currentGrid = num;
+        const canvas = document.getElementById('relationship-canvas');
+        document.getElementById('btn-grid-2').classList.toggle('active', num === 2);
+        document.getElementById('btn-grid-3').classList.toggle('active', num === 3);
+        
+        if(num === 2) {
+            canvas.classList.add('grid-2');
+            canvas.classList.remove('grid-3');
+        } else {
+            canvas.classList.add('grid-3');
+            canvas.classList.remove('grid-2');
+        }
+    }
 
     function initCropper(event) {
         const file = event.target.files[0];
@@ -128,7 +158,7 @@
                 img.src = e.target.result;
                 document.getElementById('cropper-modal').style.display = 'flex';
                 if (cropper) cropper.destroy();
-                cropper = new Cropper(img, { aspectRatio: 1, viewMode: 1 });
+                cropper = new Cropper(img, { aspectRatio: 1, viewMode: 1, autoCropArea: 1 });
             };
             reader.readAsDataURL(file);
         }
@@ -151,7 +181,7 @@
     function handleSubmit() {
         const name = document.getElementById('name-input').value.trim();
         if (!name) return alert("이름을 입력해주세요.");
-        if (!currentCroppedData) return alert("사진을 선택하고 재단해주세요.");
+        if (!currentCroppedData) return alert("사진을 등록해주세요.");
 
         const data = {
             id: editId || Date.now(),
@@ -159,7 +189,6 @@
             relVal: document.getElementById('relation-input').value,
             relTxt: document.getElementById('relation-input').options[document.getElementById('relation-input').selectedIndex].text,
             thought: document.getElementById('thought-input').value.trim(),
-            bgColor: document.getElementById('card-color-input').value,
             image: currentCroppedData
         };
 
@@ -174,35 +203,29 @@
         resetForm();
     }
 
-    // 수정 모드 진입: 정보 불러오기
     function loadToForm(id) {
         const char = characters.find(c => c.id === id);
         if (!char) return;
 
         editId = id;
-        document.getElementById('form-title').innerText = "캐릭터 정보 수정";
+        document.getElementById('form-title').innerText = "정보 수정";
         document.getElementById('submit-btn').innerText = "수정 완료";
         document.getElementById('cancel-edit-btn').style.display = "block";
-        
-        // 데이터 채우기
         document.getElementById('name-input').value = char.name;
         document.getElementById('relation-input').value = char.relVal;
         document.getElementById('thought-input').value = char.thought;
-        document.getElementById('card-color-input').value = char.bgColor;
         
-        // 사진 불러오기
         currentCroppedData = char.image;
         const preview = document.getElementById('photo-preview');
         preview.src = char.image;
         preview.style.display = 'block';
         document.getElementById('upload-label').style.display = 'none';
 
-        // 입력창으로 스크롤
-        document.getElementById('input-anchor').scrollIntoView({ behavior: 'smooth' });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     function saveAndRender() {
-        localStorage.setItem('char_v5_final', JSON.stringify(characters));
+        localStorage.setItem('char_v_final_last', JSON.stringify(characters));
         renderList();
         renderCanvas();
     }
@@ -220,7 +243,7 @@
                     <button onclick="move(${idx}, -1)">▲</button>
                     <button onclick="move(${idx}, 1)">▼</button>
                     <button onclick="loadToForm(${char.id})">수정</button>
-                    <button style="color:red" onclick="remove(${char.id})">삭제</button>
+                    <button style="color:red" onclick="remove(${char.id})">✕</button>
                 </div>
             `;
             listDiv.appendChild(item);
@@ -233,7 +256,6 @@
         characters.forEach(data => {
             const card = document.createElement('div');
             card.className = 'card';
-            card.style.backgroundColor = data.bgColor;
             const thoughtHtml = data.thought ? `<div class="card-thought">${data.thought}</div>` : '';
             card.innerHTML = `
                 <div class="card-photo-wrap" style="border-color: var(--${data.relVal})">
@@ -265,7 +287,7 @@
     }
 
     function clearAllData() {
-        if (confirm("정말 모든 데이터를 초기화하시겠습니까? 복구할 수 없습니다.")) {
+        if (confirm("모든 데이터를 초기화할까요?")) {
             localStorage.clear();
             characters = [];
             location.reload();
@@ -281,21 +303,21 @@
         document.getElementById('thought-input').value = "";
         document.getElementById('photo-preview').style.display = "none";
         document.getElementById('upload-label').style.display = "block";
-        document.getElementById('card-color-input').value = "#ffffff";
         currentCroppedData = "";
     }
 
     function downloadImage() {
-        html2canvas(document.getElementById('relationship-canvas'), { backgroundColor: "#f5f5f7", scale: 2 }).then(cvs => {
+        const canvas = document.getElementById('relationship-canvas');
+        html2canvas(canvas, { backgroundColor: "#f5f5f7", scale: 2 }).then(cvs => {
             const link = document.createElement('a');
-            link.download = 'character-relations.png';
+            link.download = 'character-map.png';
             link.href = cvs.toDataURL();
             link.click();
         });
     }
 
     window.onload = () => {
-        const saved = localStorage.getItem('char_v5_final');
+        const saved = localStorage.getItem('char_v_final_last');
         if (saved) {
             characters = JSON.parse(saved);
             renderList();
